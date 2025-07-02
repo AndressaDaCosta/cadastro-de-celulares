@@ -11,6 +11,9 @@
 			href="styles.css" />
 	</head>
 	<body>
+		<button type="button" class="btn-theme" id="theme-toggle" onclick="toggleTheme()" title="Mudar para tema escuro">
+			🌙
+		</button>
 		<div class="container flex-container">
 			<h1>Listagem de Celulares</h1>
 
@@ -23,9 +26,9 @@
                         onkeypress="if(event.key==='Enter') searchCelulares()" />
                     <button
                         type="button"
-                        class="btn btn-search"
+                        class="btn-search-icon"
                         onclick="searchCelulares()">
-                        Pesquisar
+                        🔍 Pesquisar
                     </button>   
 				</div>
 				
@@ -45,92 +48,6 @@
 						</tr>
 					</thead>
 					<tbody>
-						<!-- Dados de exemplo (mockados) -->
-						<tr data-mock="true">
-							<td data-label="Marca">Samsung</td>
-							<td data-label="Modelo">Galaxy S23 Ultra</td>
-							<td data-label="Cor">Preto</td>
-							<td data-label="Valor">R$ 5.499,00</td>
-							<td data-label="Estado">Novo</td>
-							<td data-label="Informações">512GB, câmera 200MP, tela AMOLED 6.8"</td>
-							<td data-label="Ações">
-								<button class="btn btn-edit" onclick="editMockData(this)" disabled title="Dados de exemplo não podem ser editados">
-									Alterar
-								</button>
-								<button class="btn btn-delete" onclick="deleteMockData(this)" disabled title="Dados de exemplo não podem ser excluídos">
-									Excluir
-								</button>
-							</td>
-						</tr>
-						<tr data-mock="true">
-							<td data-label="Marca">iPhone</td>
-							<td data-label="Modelo">14 Pro Max</td>
-							<td data-label="Cor">Dourado</td>
-							<td data-label="Valor">R$ 8.799,00</td>
-							<td data-label="Estado">Novo</td>
-							<td data-label="Informações">
-								256GB, câmera tripla, tela Super Retina XDR 6.7"
-							</td>
-							<td data-label="Ações">
-								<button class="btn btn-edit" onclick="editMockData(this)" disabled title="Dados de exemplo não podem ser editados">
-									Alterar
-								</button>
-								<button class="btn btn-delete" onclick="deleteMockData(this)" disabled title="Dados de exemplo não podem ser excluídos">
-									Excluir
-								</button>
-							</td>
-						</tr>
-						<tr data-mock="true">
-							<td data-label="Marca">Motorola</td>
-							<td data-label="Modelo">Edge 40</td>
-							<td data-label="Cor">Azul</td>
-							<td data-label="Valor">R$ 3.299,00</td>
-							<td data-label="Estado">Novo</td>
-							<td data-label="Informações">256GB, tela pOLED 6.55", 5G</td>
-							<td data-label="Ações">
-								<button class="btn btn-edit" onclick="editMockData(this)" disabled title="Dados de exemplo não podem ser editados">
-									Alterar
-								</button>
-								<button class="btn btn-delete" onclick="deleteMockData(this)" disabled title="Dados de exemplo não podem ser excluídos">
-									Excluir
-								</button>
-							</td>
-						</tr>
-						<tr data-mock="true">
-							<td data-label="Marca">Xiaomi</td>
-							<td data-label="Modelo">Redmi Note 12</td>
-							<td data-label="Cor">Verde</td>
-							<td data-label="Valor">R$ 1.899,00</td>
-							<td data-label="Estado">Novo</td>
-							<td data-label="Informações">
-								128GB, tela AMOLED 6.67", carregamento rápido
-								33W
-							</td>
-							<td data-label="Ações">
-								<button class="btn btn-edit" onclick="editMockData(this)" disabled title="Dados de exemplo não podem ser editados">
-									Alterar
-								</button>
-								<button class="btn btn-delete" onclick="deleteMockData(this)" disabled title="Dados de exemplo não podem ser excluídos">
-									Excluir
-								</button>
-							</td>
-						</tr>
-						<tr data-mock="true">
-							<td data-label="Marca">LG</td>
-							<td data-label="Modelo">Velvet</td>
-							<td data-label="Cor">Branco</td>
-							<td data-label="Valor">R$ 2.999,00</td>
-							<td data-label="Estado">Usado</td>
-							<td data-label="Informações">128GB, 6GB RAM, tela P-OLED 6.8"</td>
-							<td data-label="Ações">
-								<button class="btn btn-edit" onclick="editMockData(this)" disabled title="Dados de exemplo não podem ser editados">
-									Alterar
-								</button>
-								<button class="btn btn-delete" onclick="deleteMockData(this)" disabled title="Dados de exemplo não podem ser excluídos">
-									Excluir
-								</button>
-							</td>
-						</tr>
 						<!-- Os dados do localStorage serão adicionados aqui dinamicamente -->
 					</tbody>
 				</table>
@@ -139,9 +56,9 @@
 				<div class="cadastrar-container">
 					<button
 						type="button"
-						class="btn btn-cadastrar"
+						class="btn-cadastrar-enhanced"
 						onclick="window.location.href='index.html'">
-						Cadastrar Novo Celular
+						➕ Cadastrar Novo Celular
 					</button>
 				</div>
 			</div>
@@ -152,13 +69,13 @@
 						type="button"
 						class="btn btn-back"
 						onclick="window.location.href='index.html'">
-						Voltar
+						⬅️ Voltar
 					</button>
 					<button
 						type="button"
 						class="btn btn-add"
 						onclick="window.location.href='index.html'">
-						Adicionar Celular
+						➕ Adicionar Celular
 					</button>
 				</div>
 			</div>

@@ -1,10 +1,57 @@
 document.addEventListener('DOMContentLoaded', function () {
+	// Aplicar tema antes de outras inicializações
+	applyTheme();
+
+	// Inicializar as páginas
 	if (document.getElementById('celularForm')) {
 		initCadastroPage();
 	} else if (document.querySelector('.celulares-table')) {
 		initListagemPage();
 	}
 });
+
+// ===== SISTEMA DE TEMA ESCURO/CLARO =====
+
+// Função para alternar entre temas
+function toggleTheme() {
+	const body = document.body;
+	const themeButton = document.getElementById('theme-toggle');
+
+	if (body.classList.contains('dark-theme')) {
+		// Mudando para tema claro
+		body.classList.remove('dark-theme');
+		themeButton.innerHTML = '🌙';
+		themeButton.title = 'Mudar para tema escuro';
+		localStorage.setItem('theme', 'light');
+	} else {
+		// Mudando para tema escuro
+		body.classList.add('dark-theme');
+		themeButton.innerHTML = '☀️';
+		themeButton.title = 'Mudar para tema claro';
+		localStorage.setItem('theme', 'dark');
+	}
+}
+
+// Função para aplicar o tema salvo
+function applyTheme() {
+	const savedTheme = localStorage.getItem('theme');
+	const body = document.body;
+	const themeButton = document.getElementById('theme-toggle');
+
+	if (savedTheme === 'dark') {
+		body.classList.add('dark-theme');
+		if (themeButton) {
+			themeButton.innerHTML = '☀️';
+			themeButton.title = 'Mudar para tema claro';
+		}
+	} else {
+		body.classList.remove('dark-theme');
+		if (themeButton) {
+			themeButton.innerHTML = '🌙';
+			themeButton.title = 'Mudar para tema escuro';
+		}
+	}
+}
 
 function initCadastroPage() {
 	const form = document.getElementById('celularForm');
@@ -153,7 +200,7 @@ function initListagemPage() {
 	const celulares = JSON.parse(localStorage.getItem('celulares')) || [];
 	const tableBody = document.querySelector('.celulares-table tbody');
 
-	// Adicionar os dados do localStorage aos dados mockados existentes
+	// Adicionar os dados do localStorage à tabela
 	addLocalStorageDataToTable(celulares, tableBody);
 
 	// Adicionar listener para pesquisa em tempo real
@@ -191,18 +238,36 @@ function addLocalStorageDataToTable(celulares, tableBody) {
 
 			const actionsCell = document.createElement('td');
 			actionsCell.setAttribute('data-label', 'Ações');
+			actionsCell.className = 'actions-cell';
 			actionsCell.innerHTML = `
-				<button class="btn btn-edit" onclick="editCelular(${index})" title="Alterar este celular">
-					Alterar
+				<button class="btn-action btn-edit-icon" onclick="editCelular(${index})" title="Editar este celular">
+					✏️
 				</button>
-				<button class="btn btn-delete" onclick="deleteCelular(${index})" title="Excluir este celular">
-					Excluir
+				<button class="btn-action btn-delete-icon" onclick="deleteCelular(${index})" title="Excluir este celular">
+					🗑️
 				</button>
 			`;
 			row.appendChild(actionsCell);
 
 			tableBody.appendChild(row);
 		});
+	} else {
+		// Mostrar mensagem quando não há dados cadastrados
+		const row = document.createElement('tr');
+		const cell = document.createElement('td');
+		cell.setAttribute('colspan', '7');
+		cell.className = 'empty-message';
+		cell.style.textAlign = 'center';
+		cell.style.padding = '40px 20px';
+		cell.style.fontSize = '16px';
+		cell.innerHTML = `
+			<div>
+				📱 Nenhum celular cadastrado ainda.<br>
+				<strong>Clique em "➕ Cadastrar Novo Celular" para começar!</strong>
+			</div>
+		`;
+		row.appendChild(cell);
+		tableBody.appendChild(row);
 	}
 }
 
@@ -320,13 +385,6 @@ function deleteCelular(index) {
 	}
 }
 
-// Função para "deletar" dados mockados (apenas mostra aviso)
-function deleteMockData(button) {
-	alert(
-		'Este é um dado de exemplo e não pode ser excluído. Apenas os celulares que você cadastrar podem ser excluídos.'
-	);
-}
-
 function editCelular(index) {
 	try {
 		const celulares = JSON.parse(localStorage.getItem('celulares')) || [];
@@ -350,17 +408,11 @@ function editCelular(index) {
 	}
 }
 
-function editMockData(button) {
-	alert(
-		'Este é um dado de exemplo e não pode ser editado. Apenas os celulares que você cadastrar podem ser editados.'
-	);
-}
-
 function refreshTable() {
 	const tableBody = document.querySelector('.celulares-table tbody');
 
-	const localStorageRows = tableBody.querySelectorAll('.localStorage-data');
-	localStorageRows.forEach((row) => row.remove());
+	// Limpar toda a tabela
+	tableBody.innerHTML = '';
 
 	const celulares = JSON.parse(localStorage.getItem('celulares')) || [];
 	addLocalStorageDataToTable(celulares, tableBody);
