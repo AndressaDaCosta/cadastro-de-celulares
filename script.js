@@ -10,6 +10,60 @@ function initCadastroPage() {
 	const form = document.getElementById('celularForm');
 	const saveButton = form.querySelector('.btn-save');
 
+	const editingData = sessionStorage.getItem('editingCelular');
+	let isEditing = false;
+	let editingIndex = -1;
+
+	if (editingData) {
+		try {
+			const editInfo = JSON.parse(editingData);
+			isEditing = true;
+			editingIndex = editInfo.index;
+
+			fillFormWithData(editInfo.data);
+
+			const pageTitle = document.querySelector('h1');
+			if (pageTitle) {
+				pageTitle.textContent = 'Editar Celular';
+			}
+
+			saveButton.textContent = 'Atualizar';
+		} catch (error) {
+			console.error('Erro ao carregar dados para edição:', error);
+			sessionStorage.removeItem('editingCelular');
+		}
+	}
+
+	function fillFormWithData(celular) {
+		const marcaSelect = document.getElementById('marca');
+		const marcaOptions = marcaSelect.options;
+		for (let i = 0; i < marcaOptions.length; i++) {
+			if (marcaOptions[i].text === celular.marca) {
+				marcaSelect.selectedIndex = i;
+				break;
+			}
+		}
+
+		document.getElementById('modelo').value = celular.modelo;
+		document.getElementById('cor').value = celular.cor;
+
+		const valorNumerico = celular.valor
+			.replace(/[^\d,]/g, '')
+			.replace(',', '.');
+		document.getElementById('valor').value = valorNumerico;
+
+		const estadoValue = celular.estado.toLowerCase();
+		const estadoRadio = document.querySelector(
+			`input[name="estado"][value="${estadoValue}"]`
+		);
+		if (estadoRadio) {
+			estadoRadio.checked = true;
+		}
+
+		document.getElementById('informacoes').value =
+			celular.informacoes || '';
+	}
+
 	// Função para verificar se todos os campos obrigatórios estão preenchidos
 	function checkFormValidity() {
 		const marca = document.getElementById('marca').value;
@@ -29,8 +83,10 @@ function initCadastroPage() {
 		saveButton.disabled = !isFormValid;
 	}
 
-	saveButton.disabled = true;
-	saveButton.style.cursor = 'not-allowed';
+	setTimeout(checkFormValidity, 100);
+
+	saveButton.disabled = !isEditing;
+	saveButton.style.cursor = isEditing ? 'pointer' : 'not-allowed';
 
 	const requiredFields = ['marca', 'modelo', 'cor', 'valor'];
 	requiredFields.forEach((fieldId) => {
@@ -71,16 +127,21 @@ function initCadastroPage() {
 				informacoes: formData.get('informacoes') || ''
 			};
 
-			celulares.push(celular);
+			if (isEditing && editingIndex >= 0) {
+				celulares[editingIndex] = celular;
+
+				sessionStorage.removeItem('editingCelular');
+
+				alert('Celular atualizado com sucesso!');
+			} else {
+				celulares.push(celular);
+				alert('Dados salvos com sucesso!');
+			}
 
 			localStorage.setItem('celulares', JSON.stringify(celulares));
 
-			form.reset();
-
-			saveButton.disabled = true;
-			saveButton.style.cursor = 'not-allowed';
-
-			alert('Dados salvos com sucesso!');
+			// Redirecionar para a listagem após salvar/atualizar
+			window.location.href = 'listagem.html';
 		} catch (error) {
 			console.error('Erro ao salvar dados:', error);
 			alert('Erro ao salvar os dados. Tente novamente!');
@@ -131,6 +192,9 @@ function addLocalStorageDataToTable(celulares, tableBody) {
 			const actionsCell = document.createElement('td');
 			actionsCell.setAttribute('data-label', 'Ações');
 			actionsCell.innerHTML = `
+				<button class="btn btn-edit" onclick="editCelular(${index})" title="Alterar este celular">
+					Alterar
+				</button>
 				<button class="btn btn-delete" onclick="deleteCelular(${index})" title="Excluir este celular">
 					Excluir
 				</button>
@@ -260,6 +324,35 @@ function deleteCelular(index) {
 function deleteMockData(button) {
 	alert(
 		'Este é um dado de exemplo e não pode ser excluído. Apenas os celulares que você cadastrar podem ser excluídos.'
+	);
+}
+
+function editCelular(index) {
+	try {
+		const celulares = JSON.parse(localStorage.getItem('celulares')) || [];
+
+		if (index >= 0 && index < celulares.length) {
+			const celular = celulares[index];
+
+			sessionStorage.setItem(
+				'editingCelular',
+				JSON.stringify({
+					index: index,
+					data: celular
+				})
+			);
+
+			window.location.href = 'index.html';
+		}
+	} catch (error) {
+		console.error('Erro ao carregar dados para edição:', error);
+		alert('Erro ao carregar os dados. Tente novamente!');
+	}
+}
+
+function editMockData(button) {
+	alert(
+		'Este é um dado de exemplo e não pode ser editado. Apenas os celulares que você cadastrar podem ser editados.'
 	);
 }
 
