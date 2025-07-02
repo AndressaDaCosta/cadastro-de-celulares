@@ -67,6 +67,26 @@ textarea:focus {
 	box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
 }
 
+.input-error {
+	border-color: #e74c3c !important;
+	box-shadow: 0 0 5px rgba(231, 76, 60, 0.5) !important;
+}
+
+.radio-group.input-error {
+	border: 2px solid #e74c3c;
+	border-radius: 4px;
+	padding: 10px;
+	background-color: #fdf2f2;
+}
+
+.error-message {
+	color: #e74c3c;
+	font-size: 14px;
+	margin-top: 5px;
+	display: block;
+	font-weight: normal;
+}
+
 .radio-group {
 	display: flex;
 	gap: 20px;
@@ -110,8 +130,15 @@ input[type='radio'] {
 	color: white;
 }
 
-.btn-save:hover {
+.btn-save:hover:not(:disabled) {
 	background-color: #27ae60;
+}
+
+.btn-save:disabled {
+	background-color: #bdc3c7;
+	color: #7f8c8d;
+	cursor: not-allowed;
+	opacity: 0.6;
 }
 
 .btn-back {
@@ -233,6 +260,16 @@ input[type='radio'] {
 	background-color: #f1f1f1;
 }
 
+/* Destacar dados vindos do localStorage
+.localStorage-data {
+	background-color: #e8f5e8 !important;
+	border-left: 4px solid #27ae60;
+}
+
+.localStorage-data:hover {
+	background-color: #d4edda !important;
+} */
+
 .celulares-table td {
 	vertical-align: middle;
 }
@@ -306,6 +343,57 @@ input[type='radio'] {
 	margin-bottom: 20px;
 	justify-content: space-between;
 	align-items: center;
+}
+
+.filter-area label {
+	font-weight: bold;
+	color: #2c3e50;
+	min-width: 80px;
+}
+
+.filter-area input[type='text'] {
+	flex: 1;
+	min-width: 250px;
+	padding: 12px 15px;
+	border: 2px solid #ddd;
+	border-radius: 5px;
+	font-size: 16px;
+	transition: all 0.3s ease;
+}
+
+.filter-area input[type='text']:focus {
+	border-color: #3498db;
+	box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+	outline: none;
+}
+
+.btn-search {
+	background-color: #3498db;
+	color: white;
+	padding: 12px 20px;
+	border: none;
+	border-radius: 5px;
+	font-size: 16px;
+	font-weight: bold;
+	cursor: pointer;
+	transition: all 0.3s ease;
+}
+
+.btn-search:hover {
+	background-color: #2980b9;
+	transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+	.filter-area {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.filter-area input[type='text'] {
+		min-width: 100%;
+		margin: 10px 0;
+	}
 }
 
 .actions-container {
