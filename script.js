@@ -105,8 +105,12 @@ function initListagemPage() {
 
 function addLocalStorageDataToTable(celulares, tableBody) {
 	if (celulares.length > 0) {
-		celulares.forEach((celular) => {
+		celulares.forEach((celular, index) => {
 			const row = document.createElement('tr');
+
+			// Adicionar uma classe para identificar dados do localStorage
+			row.classList.add('localStorage-data');
+			row.setAttribute('data-index', index);
 
 			const labels = [
 				'Marca',
@@ -117,12 +121,21 @@ function addLocalStorageDataToTable(celulares, tableBody) {
 				'Informações'
 			];
 
-			Object.entries(celular).forEach(([key, value], index) => {
+			Object.entries(celular).forEach(([key, value], labelIndex) => {
 				const cell = document.createElement('td');
 				cell.textContent = value;
-				cell.setAttribute('data-label', labels[index]);
+				cell.setAttribute('data-label', labels[labelIndex]);
 				row.appendChild(cell);
 			});
+
+			const actionsCell = document.createElement('td');
+			actionsCell.setAttribute('data-label', 'Ações');
+			actionsCell.innerHTML = `
+				<button class="btn btn-delete" onclick="deleteCelular(${index})" title="Excluir este celular">
+					Excluir
+				</button>
+			`;
+			row.appendChild(actionsCell);
 
 			tableBody.appendChild(row);
 		});
@@ -218,4 +231,44 @@ function displayCelulares(celulares, tableBody) {
 		row.appendChild(cell);
 		tableBody.appendChild(row);
 	}
+}
+
+function deleteCelular(index) {
+	const confirmDelete = confirm(
+		'Tem certeza que deseja excluir este celular?'
+	);
+
+	if (confirmDelete) {
+		try {
+			let celulares = JSON.parse(localStorage.getItem('celulares')) || [];
+
+			celulares.splice(index, 1);
+
+			localStorage.setItem('celulares', JSON.stringify(celulares));
+
+			refreshTable();
+
+			alert('Celular excluído com sucesso!');
+		} catch (error) {
+			console.error('Erro ao excluir celular:', error);
+			alert('Erro ao excluir o celular. Tente novamente!');
+		}
+	}
+}
+
+// Função para "deletar" dados mockados (apenas mostra aviso)
+function deleteMockData(button) {
+	alert(
+		'Este é um dado de exemplo e não pode ser excluído. Apenas os celulares que você cadastrar podem ser excluídos.'
+	);
+}
+
+function refreshTable() {
+	const tableBody = document.querySelector('.celulares-table tbody');
+
+	const localStorageRows = tableBody.querySelectorAll('.localStorage-data');
+	localStorageRows.forEach((row) => row.remove());
+
+	const celulares = JSON.parse(localStorage.getItem('celulares')) || [];
+	addLocalStorageDataToTable(celulares, tableBody);
 }
